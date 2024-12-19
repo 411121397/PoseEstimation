@@ -142,7 +142,7 @@ def run_exercise(status_dict):
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
-                mp_drawing.DrawingSpec(color=(255, 0, 0), thickness=2, circle_radius=2)
+                mp_drawing.DrawingSpec(color=( 67,196,42) if (feedback=="Error in Pose Detection" or feedback=="Pose Not Detected. Ensure Full Fody is Visible.") else (44,42,196), thickness=2, circle_radius=2)
             )
 
             # Display the frame
