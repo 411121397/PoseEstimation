@@ -138,7 +138,7 @@ def run_exercise(status_dict):
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
-                mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
+                mp_drawing.DrawingSpec(color=( 67,196,42) if (warning_message=="Adjust your position (straighten leg & lean forward)" or warning_message=="Pose not detected. Make sure full body is visible.") else (44,42,196), thickness=2, circle_radius=2)
             )
 
             # Feedback overlay
