@@ -6,6 +6,9 @@ import os
 # Import your exercise modules
 import Arm_Extension
 import ElbowUpDown
+import Hamstring_Stretch
+import Partial_Wall_Squat
+import Seated_Knee_Extension
 import SideLegRaise
 import Single_Leg_Squat
 import wallWalk_leftHand
@@ -14,6 +17,8 @@ import calf
 #import calf_stretch
 import Step_Reaction_Training
 import Single_Leg_Squat
+import Side_Box_Step_Ups
+import Front_Box_Step_Ups
 
 
 
@@ -107,14 +112,14 @@ def start_SideLegRaise():
 
 def start_Side_Box_Step_Ups():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Side_Box_Step_Ups.run_exercise(exercise_status)
         if exercise_status["Side Box Step Ups"]:
             update_button_state()
     threading.Thread(target=run).start()
 
 def start_Front_Box_Step_Ups():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Front_Box_Step_Ups.run_exercise(exercise_status)
         if exercise_status["Front Box Step Ups"]:
             update_button_state()
     threading.Thread(target=run).start()
@@ -138,21 +143,24 @@ def start_calf():
 
 def start_Hamstring_Stretch():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Hamstring_Stretch.run_exercise(exercise_status)
         if exercise_status["Hamstring Stretch"]:
             update_button_state()
     threading.Thread(target=run).start()
 
+
+
+
 def start_Partial_Wall_Squat():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Partial_Wall_Squat.run_exercise(exercise_status)
         if exercise_status["Partial Wall Squat"]:
             update_button_state()
     threading.Thread(target=run).start()
 
 def start_Seated_Knee_Extension():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Seated_Knee_Extension.run_exercise(exercise_status)
         if exercise_status["Seated Knee Extension"]:
             update_button_state()
     threading.Thread(target=run).start()
