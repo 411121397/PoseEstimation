@@ -47,28 +47,39 @@ exercise_conditions = {
     "Partial Wall Squat": lambda: exercise_status.get("Partial Wall Squat", False),
     "Seated Knee Extension": lambda: exercise_status.get("Seated Knee Extension", False),
 }
-video_path = r"C:\Users\Carl\Desktop\pose-estim\pose-estimation\poseVideos\tutorial.mp4"
-#video_path = r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\6.mp4"
+#video_path = r"C:\Users\Carl\Desktop\pose-estim\pose-estimation\poseVideos\tutorial.mp4"
+exercise_videos = {
+    "Standing Leg Front Lift": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\standing_leg_front_lift.mp4",
+    "Single Leg Squat": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\single_leg_squat.mp4",
+    "Side Leg Raise": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\side_leg_raise.mp4",
+    "Side Box Step Ups": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\side_box_step_ups.mp4",
+    "Front Box Step Ups": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\12.mp4",
+    "Step Reaction Training": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\step_reaction_training.mp4",
+    "Calf Stretch": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\calf_stretch.mp4",
+    "Hamstring Stretch": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\hamstring_stretch.mp4",
+    "Partial Wall Squat": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\partial_wall_squat.mp4",
+    "Seated Knee Extension": r"C:\Users\Notnik_kg\Desktop\PoseEstimation\poseVideos\seated_knee_extension.mp4",
+}
 
 
 # Define a function to start exercises
-def start_ElbowUpDown_Camera():
+def start_ElbowUpDown():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        ElbowUpDown.run_exercise(exercise_status)
         if exercise_status["Elbow Up Down"]:
             update_button_state()
     threading.Thread(target=run).start()
 
-def start_Arm_Extension_Camera():
+def start_Arm_Extension():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Arm_Extension.run_exercise(exercise_status)
         if exercise_status["Arm Extension"]:
             update_button_state()
     threading.Thread(target=run).start()
 
-def start_wallWalk_leftHand_Camera():
+def start_wallWalk_leftHand():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        wallWalk_leftHand.run_exercise(exercise_status)
         if exercise_status["Wall Walk Left Hand"]:
             update_button_state()
     threading.Thread(target=run).start()
@@ -82,14 +93,14 @@ def start_Standing_Leg_Front_Lift():
 
 def start_Single_Leg_Squat():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Single_Leg_Squat.run_exercise(exercise_status)
         if exercise_status["Single Leg Squat"]:
             update_button_state()
     threading.Thread(target=run).start()
 
-def start_SideLegRaise_camera():
+def start_SideLegRaise():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        SideLegRaise.run_exercise(exercise_status)
         if exercise_status["Side Leg Raise"]:
             update_button_state()
     threading.Thread(target=run).start()
@@ -110,14 +121,14 @@ def start_Front_Box_Step_Ups():
 
 def start_Step_Reaction_Training():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        Step_Reaction_Training.run_exercise(exercise_status)
         if exercise_status["Step Reaction Training"]:
             update_button_state()
     threading.Thread(target=run).start()
 
 def start_calf():
     def run():
-        Standing_LeftLeg_Front_Lift.run_exercise(exercise_status)
+        calf.run_exercise(exercise_status)
         if exercise_status["Calf Stretch"]:
             update_button_state()
     threading.Thread(target=run).start()
@@ -152,7 +163,7 @@ def update_button_state():
         btn_leg_raise["state"]="disabled"
 
 
-def show_instructional_video(window, exercise_name):
+def show_instructional_video(window, exercise_name, video_path):
     def play_video(video_path):
         if not os.path.exists(video_path):
             print(f"Error: Video file not found at {video_path}")
@@ -309,40 +320,36 @@ def open_injury_page(window, injury_type):
     # Based on the injury type, show the corresponding exercises
     if injury_type == "Arm Injuries":
         exercises = [
-            ("Elbow Up Down", start_ElbowUpDown_Camera),
-            ("Arm Extension", start_Arm_Extension_Camera),
-            ("Wall Walk Left Hand", start_wallWalk_leftHand_Camera)
+            ("Elbow Up Down", start_ElbowUpDown),
+            ("Arm Extension", start_Arm_Extension),
+            ("Wall Walk Left Hand", start_wallWalk_leftHand)
         ]
     else:
         exercises = [
             ("Standing Leg Front Lift", lambda: show_instructional_video(window, start_Standing_Leg_Front_Lift)),
             ("Single Leg Squat", lambda: show_instructional_video(window, start_Single_Leg_Squat)),
-            ("Side Leg Raise", lambda:show_instructional_video(window,start_SideLegRaise_camera)),
+            ("Side Leg Raise", lambda:show_instructional_video(window,start_SideLegRaise)),
             ("Side Box Step Ups", lambda:show_instructional_video(window,start_Side_Box_Step_Ups)),
-            ("Front Box Step Ups", lambda:show_instructional_video(window,start_Front_Box_Step_Ups)),
+            ("Front Box Step Ups", start_Front_Box_Step_Ups),
             ("Step Reaction Training", lambda: show_instructional_video(window, start_Step_Reaction_Training)),
             ("Calf Stretch", lambda: show_instructional_video(window,start_calf)),
             ("Hamstring Stretch", lambda: show_instructional_video(window,start_Hamstring_Stretch)),
             ("Partial Wall Squat", lambda: show_instructional_video(window,start_Partial_Wall_Squat)),
-            ("Seated Knee Extension", lambda: show_instructional_video(window,start_Seated_Knee_Extension)),
+            ("Seated Knee Extension", start_Seated_Knee_Extension),
         ]
 
       # Add buttons for exercises
+
     for text, command in exercises:
-        # Determine the state and color dynamically for each exercise
-        condition = exercise_conditions.get(text, lambda: False)()
-        bg_color = "gray" if condition else "#008878"
-        state = "disabled" if condition else "normal"
-        
+        video_path = exercise_videos.get(text, "")
         btn = tk.Button(
             window,
             text=text,
-            command=command,
+            command=lambda t=text, c=command, v=video_path: show_instructional_video(window, c, v),
             font=("Arial", 14),
-            bg=bg_color,
+            bg="#008878",
             fg="white",
-            width=22,
-            state=state
+            width=22
         )
         btn.pack(pady=10)
 
