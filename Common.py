@@ -4,7 +4,7 @@ from pygame import mixer
 import cv2
 import time
 import tkinter as tk
-
+from exercise_state import exercise_status, stop_exercise_event
 mixer.init()
 stop_exercise=False
 success_path = os.path.join("sounds", "success.wav")
@@ -55,11 +55,8 @@ def calculate_angle(a, b, c):
 
     return angle
 
-def stop_exercise_callback():
-    global stop_exercise
-    stop_exercise = True
 
-def create_tkinter_window():
+def create_tkinter_window(exercise_name):
     root = tk.Tk()
     root.title("Control Panel")
     root.geometry("300x100")
@@ -67,11 +64,11 @@ def create_tkinter_window():
 
     label = tk.Label(root, text="Exercise", font=("Arial", 14), bg="#C5EBE8", fg="#008878")
     label.pack(pady=10)
-
+    
     btn_done = tk.Button(
         root,
         text="Done",
-        command=lambda: [stop_exercise_callback(), root.destroy()],
+        command=lambda: [set_exercise_done(exercise_name), root.destroy()],
         font=("Arial", 14),
         bg="#FF6347",
         fg="white",
@@ -79,6 +76,16 @@ def create_tkinter_window():
     )
     btn_done.pack(pady=10)
     root.mainloop()
+
+def set_exercise_done(exercise_name):
+        if exercise_name in exercise_status:
+            exercise_status[exercise_name] = True
+            print(f"Exercise '{exercise_name}' marked as done.")
+            stop_exercise_event.set()
+        else:
+            print(f"Exercise '{exercise_name}' not found.")
+def stop_exercise_callback():
+    x=0
 
 def display_countdown(image, seconds_remaining):
         
