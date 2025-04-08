@@ -23,7 +23,6 @@ class ExerciseApp:
         # self.root.geometry("1400x800")
         self.root.attributes('-fullscreen', True)
 
-
         # Get screen width and height for scaling elements
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -35,7 +34,7 @@ class ExerciseApp:
         self.video_label = Label(self.root)
         self.video_label.place(x=x_position, y=y_position, width=video_width, height=video_height)
 
-
+        print(f"Current resolution: {video_width}x{video_height}")
         # self.start_button = Button(self.root, text="Start", command=self.start_exercise)
         # self.start_button.place(x=400, y=1020, width=120, height=50)
         #
@@ -45,10 +44,9 @@ class ExerciseApp:
         # self.quit_button = Button(self.root, text="Finish", command=self.quit_app)
         # self.quit_button.place(x=1400, y=1020, width=120, height=50)
 
-
-        self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280) #resolution of the camera
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        self.cap = cv2.VideoCapture(1)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # resolution of the camera
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080 )
         self.cap.set(cv2.CAP_PROP_FPS, 30)
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
@@ -57,6 +55,7 @@ class ExerciseApp:
         self.pose = self.mp_pose.Pose(min_detection_confidence=0.2, min_tracking_confidence=0.2, model_complexity=0)
 
         self.stop_exercise_flag = False
+
     def perform_countdown_ui(self):
         start_time = time.time()
         countdown_sound.play()  # Play the countdown sound
@@ -94,13 +93,8 @@ class ExerciseApp:
         else:
             print("Countdown was interrupted. Exercise not started.")
 
-
     def stop_exercise(self):
         self.stop_exercise_flag = True
-        if self.cap:
-            self.cap.release()
-            self.cap = None
-        cv2.destroyAllWindows()
 
     def quit_app(self):
         self.cap.release()
@@ -108,7 +102,7 @@ class ExerciseApp:
         self.root.quit()
 
     def run_exercise(self):
-        
+
         counter, reps, stage = 0, 0, None
         tot_count = 5
         warning_message = None
@@ -119,6 +113,7 @@ class ExerciseApp:
         while self.cap.isOpened() and not self.stop_exercise_flag:
             ret, frame = self.cap.read()
             if not ret:
+                print("Error: Could not open video stream.")
                 break
             # frame = cv2.flip(frame, 1)
             image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -165,7 +160,8 @@ class ExerciseApp:
                         frame_height, frame_width, _ = image.shape  # Get actual frame size
 
                         cv2.putText(image, str(int(angle)),
-                                    tuple(np.multiply(elbow, [frame_width, frame_height]).astype(int)),  # Use actual size
+                                    tuple(np.multiply(elbow, [frame_width, frame_height]).astype(int)),
+                                    # Use actual size
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
 
                         if angle > 140:
@@ -198,22 +194,24 @@ class ExerciseApp:
                     last_lower_sound_time = current_time
 
             if good_job_display and last_good_job_time:
-                    if time.time() - last_good_job_time <= 5:
-                        warning_message = "Good Job! Keep Going"
-                    else:
-                        good_job_display = False
+                if time.time() - last_good_job_time <= 5:
+                    warning_message = "Good Job! Keep Going"
+                else:
+                    good_job_display = False
 
-            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS, self.mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+            self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
+                                           self.mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2,
+                                                                       circle_radius=2),
                                            self.mp_drawing.DrawingSpec(
                                                color=(44, 42, 196) if (stage in ['too_high', 'too_low']) else (
-                                               67, 196, 42),
+                                                   67, 196, 42),
                                                thickness=2, circle_radius=2)
                                            )
 
             image = create_feedback_overlay(image, warning_message=warning_message, counter=counter, reps=reps)
 
             img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            img = cv2.resize(img, (1280, 720))#1920, 1000
+            img = cv2.resize(img, (1280, 720))  # 1920, 1000
             # img = cv2.flip(img, 1)
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
             photo = tk.PhotoImage(data=cv2.imencode('.png', img)[1].tobytes())
@@ -224,11 +222,9 @@ class ExerciseApp:
             if self.stop_exercise_flag:
                 break
 
-        if self.cap:
-            self.cap.release()
-            self.cap = None
-            cv2.destroyAllWindows()
-            cv2.waitKey(1)
+        self.cap.release()
+        cv2.destroyAllWindows()
+        cv2.waitKey(1)
 
 
 if __name__ == "__main__":
